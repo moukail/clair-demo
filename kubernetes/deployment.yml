@@ -1,0 +1,95 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: clair-db
+spec:
+  ports:
+    - port: 5432
+  selector:
+    app: clair-db
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clair-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clair-db
+  template:
+    metadata:
+      labels:
+        app: clair-db
+    spec:
+      containers:
+        - name: clair-db
+          image: docker.io/library/postgres:18
+          env:
+            - name: POSTGRES_DB
+              value: clair
+            - name: POSTGRES_USER
+              value: clair
+            - name: POSTGRES_PASSWORD
+              value: clairpass
+          ports:
+            - containerPort: 5432
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: clair
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: clair
+  template:
+    metadata:
+      labels:
+        app: clair
+    spec:
+      containers:
+        - name: clair
+          image: quay.io/projectquay/clair:4.9.0
+          env:
+            - name: CLAIR_CONF
+              value: /etc/clair/clair-config.yaml
+            - name: CLAIR_MODE
+              value: combo
+          ports:
+            - containerPort: 6060
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/clair
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "100m"
+      volumes:
+        - name: config-volume
+          secret:
+            secretName: clair-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: clair-service
+spec:
+  selector:
+    app: clair
+  type: NodePort
+  ports:
+    - port: 6060
+      targetPort: 6060
+      nodePort: 30606
