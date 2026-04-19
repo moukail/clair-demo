@@ -25,7 +25,6 @@ kubectl create secret generic clair-config --from-file=clair-config.yaml=./confi
 kubectl apply -f kubernetes/deployment.yml
 ```
 
-======
 Clair
 =====
 ```bash
@@ -39,5 +38,5 @@ clairctl report docker.io/library/nginx:1.29.5-alpine3.23
 clairctl report --host http://$(minikube ip):30606/ docker.io/library/nginx:1.29.5-alpine3.23
 ```
 
-https://www.redhat.com/en/topics/containers/what-is-clair
-https://quay.github.io/clair/
+[What is Clair?](https://www.redhat.com/en/topics/containers/what-is-clair)
+[Clair](https://quay.github.io/clair/)
