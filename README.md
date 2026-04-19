@@ -39,4 +39,4 @@ clairctl report --host http://$(minikube ip):30606/ docker.io/library/nginx:1.29
 ```
 
 [What is Clair?](https://www.redhat.com/en/topics/containers/what-is-clair)
-[Clair](https://quay.github.io/clair/)
+[Clair Documentation](https://quay.github.io/clair/)
