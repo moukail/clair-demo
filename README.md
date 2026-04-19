@@ -38,3 +38,5 @@ minikube service clair-service --url
 clairctl report docker.io/library/nginx:1.29.5-alpine3.23
 clairctl report --host http://$(minikube ip):30606/ docker.io/library/nginx:1.29.5-alpine3.23
 ```
+
+https://www.redhat.com/en/topics/containers/what-is-clair
